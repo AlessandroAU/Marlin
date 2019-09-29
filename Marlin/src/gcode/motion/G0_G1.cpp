@@ -31,6 +31,12 @@
 
 #include "../../sd/cardreader.h"
 
+#if ENABLED(DITHERING)
+  #include "../../module/stepper.h"
+  #include "../../feature/dither.h"
+  extern Dithering Dither;
+#endif
+
 #if ENABLED(NANODLP_Z_SYNC)
   #include "../../module/stepper.h"
 #endif
@@ -108,6 +114,13 @@ void GcodeSuite::G0_G1(
     #ifdef G0_FEEDRATE
       // Restore the motion mode feedrate
       if (fast_move) feedrate_mm_s = old_feedrate;
+    #endif
+	
+	#if ENABLED(DITHERING)
+      if (parser.seenval('Z')) {
+        planner.synchronize();
+        Dither.Handle(parser.value_linear_units());
+      }
     #endif
 
     #if ENABLED(NANODLP_Z_SYNC)

@@ -181,6 +181,10 @@
   #include "libs/L6470/L6470_Marlin.h"
 #endif
 
+#if ENABLED(DITHERING)
+  #include "feature/dither.h"
+#endif
+
 bool Running = true;
 
 // For M109 and M190, this flag may be cleared (by M108) to exit the wait loop
@@ -1165,6 +1169,10 @@ void setup() {
 
   #if ENABLED(PRUSA_MMU2)
     mmu2.init();
+  #endif
+
+  #if ENABLED(DITHERING)
+    Dithering Dither;
   #endif
 }
 
